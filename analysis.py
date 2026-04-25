@@ -61,3 +61,21 @@ plt.show()
 acc = accuracy_score(y_test, y_pred)
 
 print("Model Accuracy:", acc)
+
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+
+# Models
+models = {
+    "Random Forest": RandomForestClassifier(),
+    "Logistic Regression": LogisticRegression(max_iter=1000),
+    "Decision Tree": DecisionTreeClassifier()
+}
+
+# Train & Evaluate
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    acc = accuracy_score(y_test, y_pred)
+    print(f"{name} Accuracy:", acc)
