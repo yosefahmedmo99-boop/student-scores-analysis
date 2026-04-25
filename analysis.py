@@ -1,31 +1,33 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
 
-# Create dataset
-data = {
-    "Name": ["Ali", "Sara", "Yousef", "Mona"],
-    "Math": [80, 90, 85, 70],
-    "Science": [75, 95, 80, 65]
-}
+# Load data
+df = pd.read_csv("students.csv")
 
-df = pd.DataFrame(data)
+# Drop missing values (safety step)
+df = df.dropna()
 
-# Show data
-print("Dataset:")
-print(df)
+# Features (input)
+X = df.drop("GradeClass", axis=1)
 
-# Analysis
-print("\nAverage Math Score:", df["Math"].mean())
-print("Average Science Score:", df["Science"].mean())
+# Target (output)
+y = df["GradeClass"]
 
-# Best student in Math
-top_student = df[df["Math"] == df["Math"].max()]
-print("\nTop Math Student:")
-print(top_student)
+# Train/Test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
 
-# Visualization
-plt.bar(df["Name"], df["Math"])
-plt.title("Math Scores")
-plt.xlabel("Students")
-plt.ylabel("Score")
-plt.show()
+# Model
+model = RandomForestClassifier()
+model.fit(X_train, y_train)
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Accuracy
+acc = accuracy_score(y_test, y_pred)
+
+print("Model Accuracy:", acc)
