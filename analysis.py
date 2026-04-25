@@ -24,8 +24,38 @@ X_train, X_test, y_train, y_test = train_test_split(
 model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
+# Feature Importance (IMPORTANT)
+import matplotlib.pyplot as plt
+
+importances = model.feature_importances_
+features = X.columns
+
+plt.figure(figsize=(10,5))
+plt.barh(features, importances)
+plt.title("Feature Importance")
+plt.xlabel("Importance Score")
+plt.ylabel("Features")
+plt.show()
+
 # Predictions
 y_pred = model.predict(X_test)
+
+# Predictions
+y_pred = model.predict(X_test)
+
+# Confusion Matrix 
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(6,4))
+sns.heatmap(cm, annot=True, fmt="d")
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
 
 # Accuracy
 acc = accuracy_score(y_test, y_pred)
