@@ -8,6 +8,7 @@ df = pd.read_csv("students.csv")
 
 # Drop missing values (safety step)
 df = df.dropna()
+df = df.drop_duplicates()
 
 # Features (input)
 X = df.drop("GradeClass", axis=1)
@@ -72,6 +73,27 @@ models = {
     "Logistic Regression": LogisticRegression(max_iter=1000),
     "Decision Tree": DecisionTreeClassifier()
 }
+
+from sklearn.model_selection import cross_val_score
+
+model = RandomForestClassifier()
+
+scores = cross_val_score(model, X, y, cv=5)
+
+print("Cross Validation Scores:", scores)
+print("Average CV Score:", scores.mean())
+
+from sklearn.model_selection import GridSearchCV
+
+params = {
+    "n_estimators": [50, 100],
+    "max_depth": [None, 10, 20]
+}
+
+grid = GridSearchCV(RandomForestClassifier(), params, cv=3)
+grid.fit(X_train, y_train)
+
+print("Best Parameters:", grid.best_params_)
 
 # Train & Evaluate
 for name, model in models.items():
