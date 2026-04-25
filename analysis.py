@@ -1,54 +1,64 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import accuracy_score
+import matplotlib.pyplot as plt
+import seaborn as sns
 
-# Load data
+from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+
+# =========================
+# 1. Load & Clean Data
+# =========================
 df = pd.read_csv("students.csv")
 
-# Drop missing values (safety step)
 df = df.dropna()
 df = df.drop_duplicates()
 
-# Features (input)
+# =========================
+# 2. Features & Target
+# =========================
 X = df.drop("GradeClass", axis=1)
-
-# Target (output)
 y = df["GradeClass"]
 
-# Train/Test split
+# =========================
+# 3. Train/Test Split
+# =========================
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# Model
+# =========================
+# 4. Model Comparison
+# =========================
+models = {
+    "Random Forest": RandomForestClassifier(),
+    "Logistic Regression": LogisticRegression(max_iter=1000),
+    "Decision Tree": DecisionTreeClassifier()
+}
+
+print("Model Comparison Results:")
+for name, m in models.items():
+    m.fit(X_train, y_train)
+    preds = m.predict(X_test)
+    acc = accuracy_score(y_test, preds)
+    print(f"{name}: {acc:.4f}")
+
+# =========================
+# 5. Final Model (Random Forest)
+# =========================
 model = RandomForestClassifier()
 model.fit(X_train, y_train)
 
-# Feature Importance (IMPORTANT)
-import matplotlib.pyplot as plt
-
-importances = model.feature_importances_
-features = X.columns
-
-plt.figure(figsize=(10,5))
-plt.barh(features, importances)
-plt.title("Feature Importance")
-plt.xlabel("Importance Score")
-plt.ylabel("Features")
-plt.show()
-
-# Predictions
 y_pred = model.predict(X_test)
 
-# Predictions
-y_pred = model.predict(X_test)
+# Accuracy
+print("\nFinal Model Accuracy:", accuracy_score(y_test, y_pred))
 
-# Confusion Matrix 
-from sklearn.metrics import confusion_matrix
-import seaborn as sns
-import matplotlib.pyplot as plt
-
+# =========================
+# 6. Confusion Matrix
+# =========================
 cm = confusion_matrix(y_test, y_pred)
 
 plt.figure(figsize=(6,4))
@@ -58,33 +68,28 @@ plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.show()
 
-# Accuracy
-acc = accuracy_score(y_test, y_pred)
+# =========================
+# 7. Feature Importance
+# =========================
+importances = model.feature_importances_
 
-print("Model Accuracy:", acc)
+plt.figure(figsize=(10,5))
+plt.barh(X.columns, importances)
+plt.title("Feature Importance")
+plt.xlabel("Importance Score")
+plt.show()
 
-
-from sklearn.linear_model import LogisticRegression
-from sklearn.tree import DecisionTreeClassifier
-
-# Models
-models = {
-    "Random Forest": RandomForestClassifier(),
-    "Logistic Regression": LogisticRegression(max_iter=1000),
-    "Decision Tree": DecisionTreeClassifier()
-}
-
-from sklearn.model_selection import cross_val_score
-
-model = RandomForestClassifier()
-
+# =========================
+# 8. Cross Validation
+# =========================
 scores = cross_val_score(model, X, y, cv=5)
 
-print("Cross Validation Scores:", scores)
+print("\nCross Validation Scores:", scores)
 print("Average CV Score:", scores.mean())
 
-from sklearn.model_selection import GridSearchCV
-
+# =========================
+# 9. Hyperparameter Tuning
+# =========================
 params = {
     "n_estimators": [50, 100],
     "max_depth": [None, 10, 20]
@@ -93,11 +98,4 @@ params = {
 grid = GridSearchCV(RandomForestClassifier(), params, cv=3)
 grid.fit(X_train, y_train)
 
-print("Best Parameters:", grid.best_params_)
-
-# Train & Evaluate
-for name, model in models.items():
-    model.fit(X_train, y_train)
-    y_pred = model.predict(X_test)
-    acc = accuracy_score(y_test, y_pred)
-    print(f"{name} Accuracy:", acc)
+print("\nBest Parameters:", grid.best_params_)
