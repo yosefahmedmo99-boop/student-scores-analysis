@@ -1,19 +1,27 @@
-# Student Scores Analysis 📊
+# Student Performance ML Project 🤖
 
-## Overview
-This project analyzes student performance using Python.
+## Objective
+Predict student grade class using machine learning.
 
-## Tools Used
-- Python
-- Pandas
-- Matplotlib
+## Model Used
+Random Forest Classifier
 
-## What I Did
-- Created dataset
-- Calculated averages
-- Found top student
-- Built visualization
+## Steps
+- Data preprocessing
+- Train/Test split
+- Model training
+- Evaluation
 
-## Next Steps
-- Use real dataset
-- Add machine learning model
+## Results
+Achieved good accuracy on test data.
+
+## Models Comparison
+- Random Forest
+- Logistic Regression
+- Decision Tree
+
+The best model was selected based on accuracy.
+## Key Insight
+Student performance is strongly influenced by study time and absences.
+
+
