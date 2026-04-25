@@ -33,7 +33,13 @@ X_train, X_test, y_train, y_test = train_test_split(
 # 4. Model Comparison
 # =========================
 models = {
-    "Random Forest": RandomForestClassifier(),
+    "Random Forest": RandomForestClassifier(
+        n_estimators=100,
+        max_depth=6,
+        min_samples_split=10,
+        min_samples_leaf=5,
+        random_state=42
+    ),
     "Logistic Regression": LogisticRegression(max_iter=1000),
     "Decision Tree": DecisionTreeClassifier()
 }
@@ -46,15 +52,25 @@ for name, m in models.items():
     print(f"{name}: {acc:.4f}")
 
 # =========================
-# 5. Final Model (Random Forest)
+# 5. Final Model (Random Forest - Controlled)
 # =========================
-model = RandomForestClassifier()
-model.fit(X_train, y_train)
+model = RandomForestClassifier(
+    n_estimators=100,
+    max_depth=6,
+    min_samples_split=10,
+    min_samples_leaf=5,
+    random_state=42
+)
 
+model.fit(X_train, y_train)
 y_pred = model.predict(X_test)
 
 # Accuracy
 print("\nFinal Model Accuracy:", accuracy_score(y_test, y_pred))
+
+# Train vs Test check (IMPORTANT for overfitting)
+print("Train Score:", model.score(X_train, y_train))
+print("Test Score:", model.score(X_test, y_test))
 
 # =========================
 # 6. Confusion Matrix
@@ -92,10 +108,11 @@ print("Average CV Score:", scores.mean())
 # =========================
 params = {
     "n_estimators": [50, 100],
-    "max_depth": [None, 10, 20]
+    "max_depth": [5, 6, 10],
+    "min_samples_leaf": [3, 5]
 }
 
-grid = GridSearchCV(RandomForestClassifier(), params, cv=3)
+grid = GridSearchCV(RandomForestClassifier(random_state=42), params, cv=3)
 grid.fit(X_train, y_train)
 
 print("\nBest Parameters:", grid.best_params_)
