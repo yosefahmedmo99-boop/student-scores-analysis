@@ -7,13 +7,16 @@ Predict student grade class using machine learning.
 Random Forest Classifier
 
 ## Steps
-- Data preprocessing
-- Train/Test split
-- Model training
-- Evaluation
+✔ Data Cleaning
+✔ Data Analysis
+✔ Visualization
+✔ ML Model
+✔ Feature Importance
+✔ Confusion Matrix
+✔ Model Comparison
+✔ Cross Validation
+✔ Hyperparameter Tuning
 
-## Results
-Achieved good accuracy on test data.
 
 ## Models Comparison
 - Random Forest
@@ -21,7 +24,12 @@ Achieved good accuracy on test data.
 - Decision Tree
 
 The best model was selected based on accuracy.
-## Key Insight
-Student performance is strongly influenced by study time and absences.
+
+## Results
+- Achieved good accuracy using Random Forest
+- Cross-validation improved model reliability
+
+## Key Insights
+- Study time and absences strongly impact performance
 
 
